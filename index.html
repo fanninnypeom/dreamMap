@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>D3 World Map</title>
+    <style>
+      path {
+        stroke: blue;
+        stroke-width: 1.5px;
+        fill: black;
+      }
+      .l{
+        stroke: black;
+        stroke-width:0.2px; 
+      }
+     
+        stroke-width:1px; 
+      }
+    </style>
+    <script src="http://d3js.org/d3.v3.min.js"></script>
+  </head>
+  <body>
+    <script type="text/javascript">
+      var width = 4000;
+      var height = 1600;
+
+      var projection = d3.geo.mercator()
+						.center([116, 40])
+						.scale(202250)
+    					.translate([width/4, height/4]);
+      
+      var svg = d3.select("body").append("svg")
+          .attr("width", width)
+          .attr("height", height);
+      var path = d3.geo.path()
+          .projection(projection);
+      var g = svg.append("g");
+      	var color = d3.scale.category20();
+
+      d3.json("RTICLINK_BeiJing.json", function(error, topology) {
+          g.selectAll("path")
+          .data(topology.features ) 
+                    .enter()            
+            .append("path")
+          .attr("class", function(d,i){
+               
+                  return "l";  
+            })
+        //.attr("class","l")
+        .style("fill","white")
+            .attr("d", path)
+            .attr("id",function(d,i){
+                return d.properties.MapID+d.properties.ID;
+            })
+            .attr("Length",function(d,i){
+                return d.properties.Length;
+            });
+         });
+ 
+
+
+      var a=d3.rgb(255,0,0);
+      var b=d3.rgb(0,255,0);
+      var compute=d3.interpolate(a,b);
+      //new 
+      var linear = d3.scale.linear()
+                     .domain([0,50])
+                     .range([0,1]);
+
+      var ob=0;
+        bigChange(ob);
+      
+
+
+function bigChange(o){
+
+      file=o+"_extract.json";
+      d3.json(file,function(err,ddd){
+     
+  var times=-1;
+
+  var startTime=new Date().getTime();
+  var timer=window.setInterval(function() 
+{ 
+  times=times+1;
+  change(times); 
+  }, 50); 
+
+
+        //ddd.road.length
+//        console.log("t1   "+t1);
+var a = 0,b =0,c = 0,d = 0,e= 0,f =0,g = 0,h=0,m=0,i=0;
+
+/*
+function color_choose(speed)
+{
+    var color= "yellow";
+          if(speed < 10)
+          {
+              color= "#f41e09";
+          }
+          else if(speed < 20)
+          {
+            color= "#f43d09";
+          }
+          else if(speed < 30)
+          {
+            color= "#f47109";
+          }
+          else if (speed <40)
+            color= "#f48509";
+          else if (speed <50)
+            color= "#f4af09";
+          else if (speed <60)
+            color= "#e9f704";
+          else if (speed <70)
+            color= "#dbd518";
+          else if (speed <80)
+            color= "#addb18";
+          else if (speed <90)
+            color= "#68db18";
+          else 
+            color= "#2cdb18";
+      return color;
+
+}
+*/
+
+function color_choose(speed)
+{
+    var color= "yellow";
+          if(speed < 10)
+          {
+              color= "#ff0000";
+          }
+          else if(speed < 20)
+          {
+            color= "#ff3300";
+          }
+          else if(speed < 30)
+          {
+            color= "#ff6600";
+          }
+          else if (speed <40)
+            color= "#ff9900";
+          else if (speed <50)
+            color= "#ffcc00	";
+          else if (speed <60)
+            color= "#ffff00	";
+          else if (speed <70)
+            color= "#ccff00";
+          else if (speed <80)
+            color= "#99ff00	";
+          else if (speed <90)
+            color= "#66ff00";
+          else 
+            color= "#33ff00";
+      return color;
+
+}
+
+function change(t){
+      var t1=t;
+        for(var i=t1*8227;i<(t1+1)*8227;i=i+1){
+          
+          if(i>ddd.road.length-1){
+            clearInterval(timer); 
+            console.log("time   "+ob);
+            if(ob>22)
+            return;
+            else{
+              ob=ob+1;
+              bigChange(ob);
+              var sum = a+b+c+d+e+f+g+h+m+i;
+              /*
+               console.log("<10 : "+a/sum);
+               console.log("<20 : "+b/sum);
+               console.log("<30 : "+c/sum);
+               console.log("<40 : "+d/sum);
+               console.log("<50 : "+e/sum);
+               console.log("<60 : "+f/sum);
+               console.log("<70 : "+g/sum);
+               console.log("<80 : "+h/sum);
+               console.log("<90 : "+m/sum);
+               console.log("<100 : "+i/sum);
+               */
+               //console.log(a/sum+":"+b/sum+":"+c/sum+":"+d/sum+":"+e/sum+":"+f/sum+":"+g/sum+":"+h/sum+":"+m/sum+":"+i/sum);
+
+               
+               a = 0,b =0,c = 0,d = 0,e= 0,f =0,g = 0,h=0,m=0,i=0;
+            }
+            return;
+          }
+          var id=ddd.road[i].ID;
+//    var id="5956122";
+//          console.log("#"+id);
+//          console.log(g.select("body").getElementById(id));
+          var t=document.getElementById(id);
+//          console.log(t);
+          if(t!=null){
+          var l=t.getAttribute("Length");
+//          console.log("l  "+l);
+//          console.log("time  "+ddd.road[i].UsedTime);
+          var speed=l/(ddd.road[i].UsedTime/3600.0);
+          //console.log("speed"+speed);
+//          console.log("color"+compute(speed/100.0));
+          //var color=compute(speed/100.0);
+          //var color=compute(linear(speed));
+          var color = color_choose(speed);
+          /*
+         if(speed < 10)
+          {
+            a++;
+          }
+          else if(speed < 20)
+          {
+            b++;
+          }
+          else if(speed < 30)
+          {
+            c++;
+          }
+          else if (speed <40)
+            d++;
+          else if (speed <50)
+            e++;
+          else if (speed <60)
+            f++;
+          else if (speed <70)
+            g++;
+          else if (speed <80)
+            h++;
+          else if (speed <90)
+            m++;
+          else if (speed <100)
+            i++;
+          */
+
+//          g.select("body").select("#"+id).       
+          t.style.cssText ="stroke: "+color+";stroke-width:0.5px;"+"fill:white";
+
+}
+          }
+        }
+        
+//        console.log(ddd.road.length);
+      });
+
+
+     
+
+}
+
+    </script>
+  </body>
+</html>
