@@ -5,7 +5,7 @@
     <title>D3 World Map</title>
     <style>
       path {
-        stroke: blue;
+        stroke: black;
         stroke-width: 1.5px;
         fill: black;
       }
@@ -37,7 +37,7 @@
       var g = svg.append("g");
       	var color = d3.scale.category20();
 
-      d3.json("RTICLINK_BeiJing.json", function(error, topology) {
+      d3.json("data/RTICLINK_BeiJing.json", function(error, topology) {
           g.selectAll("path")
           .data(topology.features ) 
                     .enter()            
@@ -50,7 +50,7 @@
         .style("fill","white")
             .attr("d", path)
             .attr("id",function(d,i){
-                return d.properties.MapID+d.properties.ID;
+                return d.properties.MapID+String(parseInt(d.properties.Kind)-1)+d.properties.ID;
             })
             .attr("Length",function(d,i){
                 return d.properties.Length;
@@ -74,7 +74,7 @@
 
 function bigChange(o){
 
-      file=o+"_extract.json";
+      file="data/"+o+"_extract.json";
       d3.json(file,function(err,ddd){
      
   var times=-1;
