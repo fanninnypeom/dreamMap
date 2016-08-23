@@ -37,7 +37,8 @@
       var g = svg.append("g");
       var color = d3.scale.category20();
 
-
+      var v1 = 5,v2 = 10,v3 = 15,v4 = 20,v5 = 25, v6 = 30, v7 = 35,v8 = 40,v9 = 50;
+      /*
       function color_choose(speed)
       {
           var color= "yellow";
@@ -69,7 +70,41 @@
                   color= "#33ff00";
             return color;
 
+      
+      */
+      function color_choose(speed)
+      {
+          var color= "yellow";
+                if(speed < v1)
+                {
+                    color= "#ff0000";
+                }
+                else if(speed < v2)
+                {
+                  color= "#ff3300";
+                }
+                else if(speed < v3)
+                {
+                  color= "#ff6600";
+                }
+                else if (speed <v4)
+                  color= "#ff9900";
+                else if (speed <v5)
+                  color= "#ffcc00";
+                else if (speed <v6)
+                  color= "#ffff00";
+                else if (speed <v7)
+                  color= "#ccff00";
+                else if (speed <v8)
+                  color= "#99ff00 ";
+                else if (speed <v9)
+                  color= "#66ff00";
+                else 
+                  color= "#33ff00";
+            return color;
+
       }
+
 
       var text_tile = svg.append("text")
                        .attr("x",15)
@@ -88,16 +123,17 @@
                            .attr("y",70+i*20)
                            .attr("width",30)
                            .attr("height",20)
-                           .style("fill",color_choose(5+i*10));
-
+                           .style("fill",color_choose(5*i));
+        
         var texts = svg.append("text")
                        .attr("x",15)
                        .attr("y",50+i*20)
                        .attr("dx","0.5em")
                        .attr("dy","1.5em")
                        .text(function(d){
-                          return 10*i;
+                          return 5*i;
                        });
+        
 
       }
 
