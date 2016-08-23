@@ -4,7 +4,7 @@
 Unzip data.zip to dreamMap/.
 
 #### step 2
-python2: run `python -m SimpleHTTPServer` under the path of dreamMap/in terminal.
+python2: run `python -m SimpleHTTPServer` under the path of dreamMap/ in terminal.
 
 python3: run `python -m http.server` under the path of dreamMap/ in terminal.
 
