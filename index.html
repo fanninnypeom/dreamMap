@@ -10,7 +10,7 @@
         fill: black;
       }
       .l{
-        stroke: black;
+        stroke: white;
         stroke-width:0.2px; 
       }
      
@@ -21,12 +21,12 @@
   </head>
   <body>
     <script type="text/javascript">
-      var width = 4000;
-      var height = 1600;
+      var width = 1200;
+      var height = 1000;
 
       var projection = d3.geo.mercator()
 						.center([116, 40])
-						.scale(202250)
+						.scale(62250)
     					.translate([width/4, height/4]);
       
       var svg = d3.select("body").append("svg")
@@ -35,7 +35,74 @@
       var path = d3.geo.path()
           .projection(projection);
       var g = svg.append("g");
-      	var color = d3.scale.category20();
+      var color = d3.scale.category20();
+
+
+      function color_choose(speed)
+      {
+          var color= "yellow";
+                if(speed < 10)
+                {
+                    color= "#ff0000";
+                }
+                else if(speed < 20)
+                {
+                  color= "#ff3300";
+                }
+                else if(speed < 30)
+                {
+                  color= "#ff6600";
+                }
+                else if (speed <40)
+                  color= "#ff9900";
+                else if (speed <50)
+                  color= "#ffcc00 ";
+                else if (speed <60)
+                  color= "#ffff00 ";
+                else if (speed <70)
+                  color= "#ccff00";
+                else if (speed <80)
+                  color= "#99ff00 ";
+                else if (speed <90)
+                  color= "#66ff00";
+                else 
+                  color= "#33ff00";
+            return color;
+
+      }
+
+      var text_tile = svg.append("text")
+                       .attr("x",15)
+                       .attr("y",20)
+                       .attr("dx","0.5em")
+                       .attr("dy","1.5em")
+                       .text(function(d){
+                          return "Speed (km/h)"
+                       });
+
+
+      for(var i = 0;i<10;i++)
+      {
+        var colorect1 = svg.append("rect")
+                           .attr("x",50)
+                           .attr("y",70+i*20)
+                           .attr("width",30)
+                           .attr("height",20)
+                           .style("fill",color_choose(5+i*10));
+
+        var texts = svg.append("text")
+                       .attr("x",15)
+                       .attr("y",50+i*20)
+                       .attr("dx","0.5em")
+                       .attr("dy","1.5em")
+                       .text(function(d){
+                          return 10*i;
+                       });
+
+      }
+
+
+
 
       d3.json("data/RTICLINK_BeiJing.json", function(error, topology) {
           g.selectAll("path")
@@ -126,38 +193,7 @@ function color_choose(speed)
 }
 */
 
-function color_choose(speed)
-{
-    var color= "yellow";
-          if(speed < 10)
-          {
-              color= "#ff0000";
-          }
-          else if(speed < 20)
-          {
-            color= "#ff3300";
-          }
-          else if(speed < 30)
-          {
-            color= "#ff6600";
-          }
-          else if (speed <40)
-            color= "#ff9900";
-          else if (speed <50)
-            color= "#ffcc00	";
-          else if (speed <60)
-            color= "#ffff00	";
-          else if (speed <70)
-            color= "#ccff00";
-          else if (speed <80)
-            color= "#99ff00	";
-          else if (speed <90)
-            color= "#66ff00";
-          else 
-            color= "#33ff00";
-      return color;
 
-}
 
 function change(t){
       var t1=t;
