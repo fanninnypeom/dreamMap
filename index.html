@@ -41,34 +41,33 @@
       function color_choose(speed)
       {
           var color= "yellow";
-                if(speed < 10)
-                {
-                    color= "#ff0000";
-                }
-                else if(speed < 20)
-                {
-                  color= "#ff3300";
-                }
-                else if(speed < 30)
-                {
-                  color= "#ff6600";
-                }
-                else if (speed <40)
-                  color= "#ff9900";
-                else if (speed <50)
-                  color= "#ffcc00 ";
-                else if (speed <60)
-                  color= "#ffff00 ";
-                else if (speed <70)
-                  color= "#ccff00";
-                else if (speed <80)
-                  color= "#99ff00 ";
-                else if (speed <90)
-                  color= "#66ff00";
-                else 
-                  color= "#33ff00";
-            return color;
-
+          if(speed < 10)
+          {
+              color= "#ff0000";
+          }
+          else if(speed < 20)
+          {
+            color= "#ff3300";
+          }
+          else if(speed < 30)
+          {
+            color= "#ff6600";
+          }
+          else if (speed <40)
+            color= "#ff9900";
+          else if (speed <50)
+            color= "#ffcc00 ";
+          else if (speed <60)
+            color= "#ffff00 ";
+          else if (speed <70)
+            color= "#ccff00";
+          else if (speed <80)
+            color= "#99ff00 ";
+          else if (speed <90)
+            color= "#66ff00";
+          else 
+            color= "#33ff00";
+          return color;
       }
 
       var text_tile = svg.append("text")
