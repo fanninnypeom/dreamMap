@@ -3,6 +3,8 @@
   <head>
     <meta charset="utf-8">
     <title>D3 World Map</title>
+    <link href="http://libs.baidu.com/bootstrap/3.0.3/css/bootstrap.min.css" rel="stylesheet">
+<link href="https://gitcdn.github.io/bootstrap-toggle/2.2.2/css/bootstrap-toggle.min.css" rel="stylesheet">
     <style>
       path {
         stroke: black;
@@ -19,8 +21,30 @@
     </style>
     <script src="http://d3js.org/d3.v3.min.js"></script>
   </head>
+
+ 
+
   <body>
+
+<label class="checkbox-inline">
+  <input id="0" type="checkbox" checked data-toggle="toggle"> 其他
+</label>
+<label class="checkbox-inline">
+  <input id="1" type="checkbox" checked data-toggle="toggle"> 高速
+</label>
+<label class="checkbox-inline">
+  <input id="2" type="checkbox" checked data-toggle="toggle"> 快速
+</label>
+<label class="checkbox-inline">
+  <input id="3" type="checkbox" checked data-toggle="toggle"> 一般   
+</label>
+
+<script src="http://libs.baidu.com/jquery/2.0.0/jquery.min.js"></script>
+<script src="https://gitcdn.github.io/bootstrap-toggle/2.2.2/js/bootstrap-toggle.min.js"></script>
+<script src="http://libs.baidu.com/bootstrap/3.0.3/js/bootstrap.min.js"></script>
     <script type="text/javascript">
+
+
       var width = 1200;
       var height = 1000;
 
@@ -113,15 +137,21 @@
                
                   return "l";  
             })
-        //.attr("class","l")
         .style("fill","white")
+
             .attr("d", path)
             .attr("id",function(d,i){
                 return d.properties.MapID+String(parseInt(d.properties.Kind)-1)+d.properties.ID;
             })
+            .attr("Kind",function(d,i){
+              return d.properties.Kind;
+            })
             .attr("Length",function(d,i){
                 return d.properties.Length;
-            });
+            }
+            )
+            .attr("show","1")
+            ;
          });
  
 
@@ -153,45 +183,7 @@ function bigChange(o){
   change(times); 
   }, 50); 
 
-
-        //ddd.road.length
-//        console.log("t1   "+t1);
 var a = 0,b =0,c = 0,d = 0,e= 0,f =0,g = 0,h=0,m=0,i=0;
-
-/*
-function color_choose(speed)
-{
-    var color= "yellow";
-          if(speed < 10)
-          {
-              color= "#f41e09";
-          }
-          else if(speed < 20)
-          {
-            color= "#f43d09";
-          }
-          else if(speed < 30)
-          {
-            color= "#f47109";
-          }
-          else if (speed <40)
-            color= "#f48509";
-          else if (speed <50)
-            color= "#f4af09";
-          else if (speed <60)
-            color= "#e9f704";
-          else if (speed <70)
-            color= "#dbd518";
-          else if (speed <80)
-            color= "#addb18";
-          else if (speed <90)
-            color= "#68db18";
-          else 
-            color= "#2cdb18";
-      return color;
-
-}
-*/
 
 
 
@@ -208,82 +200,96 @@ function change(t){
               ob=ob+1;
               bigChange(ob);
               var sum = a+b+c+d+e+f+g+h+m+i;
-              /*
-               console.log("<10 : "+a/sum);
-               console.log("<20 : "+b/sum);
-               console.log("<30 : "+c/sum);
-               console.log("<40 : "+d/sum);
-               console.log("<50 : "+e/sum);
-               console.log("<60 : "+f/sum);
-               console.log("<70 : "+g/sum);
-               console.log("<80 : "+h/sum);
-               console.log("<90 : "+m/sum);
-               console.log("<100 : "+i/sum);
-               */
-               //console.log(a/sum+":"+b/sum+":"+c/sum+":"+d/sum+":"+e/sum+":"+f/sum+":"+g/sum+":"+h/sum+":"+m/sum+":"+i/sum);
-
-               
                a = 0,b =0,c = 0,d = 0,e= 0,f =0,g = 0,h=0,m=0,i=0;
             }
             return;
           }
           var id=ddd.road[i].ID;
-//    var id="5956122";
-//          console.log("#"+id);
-//          console.log(g.select("body").getElementById(id));
           var t=document.getElementById(id);
-//          console.log(t);
           if(t!=null){
           var l=t.getAttribute("Length");
-//          console.log("l  "+l);
-//          console.log("time  "+ddd.road[i].UsedTime);
           var speed=l/(ddd.road[i].UsedTime/3600.0);
-          //console.log("speed"+speed);
-//          console.log("color"+compute(speed/100.0));
-          //var color=compute(speed/100.0);
-          //var color=compute(linear(speed));
           var color = color_choose(speed);
-          /*
-         if(speed < 10)
-          {
-            a++;
-          }
-          else if(speed < 20)
-          {
-            b++;
-          }
-          else if(speed < 30)
-          {
-            c++;
-          }
-          else if (speed <40)
-            d++;
-          else if (speed <50)
-            e++;
-          else if (speed <60)
-            f++;
-          else if (speed <70)
-            g++;
-          else if (speed <80)
-            h++;
-          else if (speed <90)
-            m++;
-          else if (speed <100)
-            i++;
-          */
-
-//          g.select("body").select("#"+id).       
+          
+          show=t.getAttribute("show");
+     //     console.log("display"+display);
+          if(show=="1")
           t.style.cssText ="stroke: "+color+";stroke-width:0.5px;"+"fill:white";
-
+          else
+            t.style.cssText ="stroke: "+color+";stroke-width:0.5px;"+"fill:white"+
+          ";display:none";
 }
           }
         }
-        
-//        console.log(ddd.road.length);
       });
 
+//道路选择按钮的触发函数
+$(function() {
+      var temp=$('#1');
+    temp.change(function() {
+          var c=this.checked;
+          g.selectAll("path").each(function(){
+           
+            if(c&&this.getAttribute("Kind")=="2"){
+                d3.select(this).attr("show","1");
+              }
+            else if(this.getAttribute("Kind")=="2"){
+                d3.select(this).attr("show","0");
+          }
+          });
+        
+    });
+  })     
+$(function() {
+      var temp=$('#0');
+    temp.change(function() {
+          var c=this.checked;
+          g.selectAll("path").each(function(){
+           
+            if(c&&this.getAttribute("Kind")=="1"){
+                d3.select(this).attr("show","1");
+              }
+            else if(this.getAttribute("Kind")=="1"){
+                d3.select(this).attr("show","0");
+          }
+          });
+        
+    });
+  })
+$(function() {
+      var temp=$('#2');
+    temp.change(function() {
+          var c=this.checked;
+          g.selectAll("path").each(function(){
+           
+            if(c&&this.getAttribute("Kind")=="3"){
+                d3.select(this).attr("show","1");
+              }
+            else if(this.getAttribute("Kind")=="3"){
+                d3.select(this).attr("show","0");
+          }
+          });
+        
+    });
+  })
+$(function() {
+      var temp=$('#3');
+    temp.change(function() {
+          var c=this.checked;
+          g.selectAll("path").each(function(){
+           
+            if(c&&this.getAttribute("Kind")=="4"){
+                d3.select(this).attr("show","1");
+              }
+            else if(this.getAttribute("Kind")=="4"){
+                d3.select(this).attr("show","0");
+          }
+          });
+        
+    });
+  })
 
-     
+
 
 }
 
