@@ -70,6 +70,17 @@
           .projection(projection);
 
 
+      var background1 = svg.append("image")
+                           .attr("class","back")
+                           .attr("x",0)
+                           .attr("y",0)
+                           .attr("width",1100)
+                           .attr("height",1000)
+                          //.attr("style","fill:steelblue")
+                          .attr("opacity","0.4")
+                          .attr("xlink:href","images/bc1ex.jpg");   
+
+
       var g = svg.append("g");
       var color = d3.scale.category20();
 
@@ -138,16 +149,10 @@
                        });
 
       }
+      
 
-      var background1 = svg.append("image")
-                           .attr("class","back")
-                           .attr("x",0)
-                           .attr("y",0)
-                           .attr("width",1100)
-                           .attr("height",1000)
-                          //.attr("style","fill:steelblue")
-                          .attr("opacity","0.4")
-                          .attr("xlink:href","images/bc1ex.jpg")
+
+      
         //show the point of beijing
 
         var peking = [116.3975273161,39.9086611069];
@@ -198,17 +203,25 @@
         return d.properties.Name;
             })
             .attr("show","1")
-            .attr("data-toggle","popover")
-            .attr("data-trigger","focus")
-            .attr("title","详细信息")
-            .attr("data-content",function(d,i){
-              return "名字: "+d.properties.Name+"长度: "+d.properties.Length;
-            })
+   //         .attr("data-toggle","popover")
+   //         .attr("data-trigger","focus")
+   //         .attr("title","详细信息")
+    //        .attr("data-content",function(d,i){
+    //          return "名字: "+d.properties.Name+"长度: "+d.properties.Length;
+    //        })
 //            .popover()
-            .on("mouseover",function(d,i){
-                $("#"+d.properties.MapID+String(parseInt(d.properties.Kind)-1)+d.properties.ID).popover('show');
-                console.log("名字"+d.properties.Name+"长度"+d.properties.Length);
-            })
+            .each(
+              function(d,i){
+                  var txt="Name: "+d.properties.Name+"  Length: "+d.properties.Length+"km";
+                $(this).popover({
+                  trigger:"hover",
+                  content:txt,
+                  placement:"buttom",
+                  container: "body"
+                })
+
+              }
+              );
             ;
          });
  
@@ -373,9 +386,9 @@ $("input#road-search").keyup(function(){ //enter
   
 );
 
-$(function () {
-  $('[data-toggle="popover"]').popover()
-});
+//$(function () {
+//  $('[data-toggle="popover"]').popover()
+//});
 
 function searchRoad(){
   var n=$("input#road-search").val();
