@@ -3,6 +3,8 @@
   <head>
     <meta charset="utf-8">
     <title>D3 World Map</title>
+    <link href="http://libs.baidu.com/bootstrap/3.0.3/css/bootstrap.min.css" rel="stylesheet">
+<link href="https://gitcdn.github.io/bootstrap-toggle/2.2.2/css/bootstrap-toggle.min.css" rel="stylesheet">
     <style>
       path {
         stroke: black;
@@ -13,63 +15,110 @@
         stroke: white;
         stroke-width:0.2px; 
       }
-     
-        stroke-width:1px; 
+      .search-size{
+        width:500px;
+        overflow-x: stroke-width:1px;      }     
+         
       }
     </style>
     <script src="http://d3js.org/d3.v3.min.js"></script>
   </head>
+
+ 
+
   <body>
-    <script type="text/javascript">
+
+<label class="checkbox-inline">
+  <input id="0" type="checkbox" checked data-toggle="toggle"> 其他
+</label>
+<label class="checkbox-inline">
+  <input id="1" type="checkbox" checked data-toggle="toggle"> 高速
+</label>
+<label class="checkbox-inline">
+  <input id="2" type="checkbox" checked data-toggle="toggle"> 快速
+</label>
+<label class="checkbox-inline">
+  <input id="3" type="checkbox" checked data-toggle="toggle"> 一般   
+</label>
+
+
+<div class="input-group search-size">
+    <input id="road-search" type="text" class="form-control input-lg"><span class="input-group-addon btn btn-primary" onclick="searchRoad()">搜索</span>
+</div>
+
+<script src="http://libs.baidu.com/jquery/2.0.0/jquery.min.js"></script>
+<script src="https://gitcdn.github.io/bootstrap-toggle/2.2.2/js/bootstrap-toggle.min.js"></script>
+<script src="http://libs.baidu.com/bootstrap/3.0.3/js/bootstrap.min.js"></script>
+    <script charset="utf-8" type="text/javascript">
+
+
       var width = 1200;
       var height = 1000;
 
+      var use1 = [116.3980871279,39.9048200566];
+      var goole = [116.4071591969 ,39.9046716842];
+
       var projection = d3.geo.mercator()
-						.center([116, 40])
-						.scale(62250)
-    					.translate([width/4, height/4]);
+						.center(goole)
+						.scale(112250)
+    					.translate([width/2-18.8, height/2+32]);
       
       var svg = d3.select("body").append("svg")
           .attr("width", width)
           .attr("height", height);
       var path = d3.geo.path()
           .projection(projection);
+
+
+      var background1 = svg.append("image")
+                           .attr("class","back")
+                           .attr("x",0)
+                           .attr("y",0)
+                           .attr("width",1100)
+                           .attr("height",1000)
+                          //.attr("style","fill:steelblue")
+                          .attr("opacity","0.4")
+                          .attr("xlink:href","images/bc1ex.jpg");   
+
+
       var g = svg.append("g");
       var color = d3.scale.category20();
 
-
+      var v1 = 5,v2 = 10,v3 = 15,v4 = 20,v5 = 25, v6 = 30, v7 = 35,v8 = 40,v9 = 45;
+      
       function color_choose(speed)
       {
           var color= "yellow";
-                if(speed < 10)
+                if(speed < v1)
                 {
                     color= "#ff0000";
                 }
-                else if(speed < 20)
+                else if(speed < v2)
                 {
                   color= "#ff3300";
                 }
-                else if(speed < 30)
+                else if(speed < v3)
                 {
                   color= "#ff6600";
                 }
-                else if (speed <40)
+                else if (speed <v4)
                   color= "#ff9900";
-                else if (speed <50)
-                  color= "#ffcc00 ";
-                else if (speed <60)
-                  color= "#ffff00 ";
-                else if (speed <70)
+                else if (speed <v5)
+                  color= "#ffcc00";
+                else if (speed <v6)
+                  color= "#ffff00";
+                else if (speed <v7)
                   color= "#ccff00";
-                else if (speed <80)
-                  color= "#99ff00 ";
-                else if (speed <90)
-                  color= "#66ff00";
+                else if (speed <v8)
+                  color= "#9eef25";//"#99ff00 ";
+                else if (speed <v9)
+                  color= "#49db1a";//"#66ff00";
                 else 
-                  color= "#33ff00";
+                  color= "#008B00";//"#54e425";//"#33ff00";
             return color;
 
       }
+     
 
       var text_tile = svg.append("text")
                        .attr("x",15)
@@ -88,7 +137,7 @@
                            .attr("y",70+i*20)
                            .attr("width",30)
                            .attr("height",20)
-                           .style("fill",color_choose(5+i*10));
+                           .style("fill",color_choose(5*i));
 
         var texts = svg.append("text")
                        .attr("x",15)
@@ -96,15 +145,38 @@
                        .attr("dx","0.5em")
                        .attr("dy","1.5em")
                        .text(function(d){
-                          return 10*i;
+                          return 5*i;
                        });
 
       }
+      
+
+
+      
+        //show the point of beijing
+
+        var peking = [116.3975273161,39.9086611069];
+                  
+        //var palace = [];
+        var proPeking = projection(peking);
+
+        
+
+        d3.text("data/RTICLINK_BeiJing.json","application/json;charset=utf-8",function(text){
+
+          //show the point of BeiJing
+          svg.append("circle")
+             .attr("class","point_of_peking")
+             .attr("cx",proPeking[0])
+             .attr("cy",proPeking[1])
+             .attr("r",1)
+             .style("fill","red");
 
 
 
 
-      d3.json("data/RTICLINK_BeiJing.json", function(error, topology) {
+          var topology=JSON.parse(text);
+//      d3.json("data/RTICLINK_BeiJing.json", function(error, topology) {
           g.selectAll("path")
           .data(topology.features ) 
                     .enter()            
@@ -113,15 +185,44 @@
                
                   return "l";  
             })
-        //.attr("class","l")
         .style("fill","white")
+        .style("stroke-width","1.5px")
+
             .attr("d", path)
             .attr("id",function(d,i){
                 return d.properties.MapID+String(parseInt(d.properties.Kind)-1)+d.properties.ID;
             })
+            .attr("Kind",function(d,i){
+              return d.properties.Kind;
+            })
             .attr("Length",function(d,i){
                 return d.properties.Length;
-            });
+            }
+            )
+            .attr("name",function(d,i){
+        return d.properties.Name;
+            })
+            .attr("show","1")
+   //         .attr("data-toggle","popover")
+   //         .attr("data-trigger","focus")
+   //         .attr("title","详细信息")
+    //        .attr("data-content",function(d,i){
+    //          return "名字: "+d.properties.Name+"长度: "+d.properties.Length;
+    //        })
+//            .popover()
+            .each(
+              function(d,i){
+                  var txt="Name: "+d.properties.Name+"  Length: "+d.properties.Length+"km";
+                $(this).popover({
+                  trigger:"hover",
+                  content:txt,
+                  placement:"buttom",
+                  container: "body"
+                })
+
+              }
+              );
+            ;
          });
  
 
@@ -153,45 +254,7 @@ function bigChange(o){
   change(times); 
   }, 50); 
 
-
-        //ddd.road.length
-//        console.log("t1   "+t1);
 var a = 0,b =0,c = 0,d = 0,e= 0,f =0,g = 0,h=0,m=0,i=0;
-
-/*
-function color_choose(speed)
-{
-    var color= "yellow";
-          if(speed < 10)
-          {
-              color= "#f41e09";
-          }
-          else if(speed < 20)
-          {
-            color= "#f43d09";
-          }
-          else if(speed < 30)
-          {
-            color= "#f47109";
-          }
-          else if (speed <40)
-            color= "#f48509";
-          else if (speed <50)
-            color= "#f4af09";
-          else if (speed <60)
-            color= "#e9f704";
-          else if (speed <70)
-            color= "#dbd518";
-          else if (speed <80)
-            color= "#addb18";
-          else if (speed <90)
-            color= "#68db18";
-          else 
-            color= "#2cdb18";
-      return color;
-
-}
-*/
 
 
 
@@ -207,86 +270,142 @@ function change(t){
             else{
               ob=ob+1;
               bigChange(ob);
-              var sum = a+b+c+d+e+f+g+h+m+i;
-              /*
-               console.log("<10 : "+a/sum);
-               console.log("<20 : "+b/sum);
-               console.log("<30 : "+c/sum);
-               console.log("<40 : "+d/sum);
-               console.log("<50 : "+e/sum);
-               console.log("<60 : "+f/sum);
-               console.log("<70 : "+g/sum);
-               console.log("<80 : "+h/sum);
-               console.log("<90 : "+m/sum);
-               console.log("<100 : "+i/sum);
-               */
-               //console.log(a/sum+":"+b/sum+":"+c/sum+":"+d/sum+":"+e/sum+":"+f/sum+":"+g/sum+":"+h/sum+":"+m/sum+":"+i/sum);
-
-               
+              /*var sum = a+b+c+d+e+f+g+h+m+i;
                a = 0,b =0,c = 0,d = 0,e= 0,f =0,g = 0,h=0,m=0,i=0;
+               */
             }
             return;
           }
           var id=ddd.road[i].ID;
-//    var id="5956122";
-//          console.log("#"+id);
-//          console.log(g.select("body").getElementById(id));
           var t=document.getElementById(id);
-//          console.log(t);
           if(t!=null){
           var l=t.getAttribute("Length");
-//          console.log("l  "+l);
-//          console.log("time  "+ddd.road[i].UsedTime);
           var speed=l/(ddd.road[i].UsedTime/3600.0);
-          //console.log("speed"+speed);
-//          console.log("color"+compute(speed/100.0));
-          //var color=compute(speed/100.0);
-          //var color=compute(linear(speed));
           var color = color_choose(speed);
-          /*
-         if(speed < 10)
-          {
-            a++;
-          }
-          else if(speed < 20)
-          {
-            b++;
-          }
-          else if(speed < 30)
-          {
-            c++;
-          }
-          else if (speed <40)
-            d++;
-          else if (speed <50)
-            e++;
-          else if (speed <60)
-            f++;
-          else if (speed <70)
-            g++;
-          else if (speed <80)
-            h++;
-          else if (speed <90)
-            m++;
-          else if (speed <100)
-            i++;
-          */
+          
+          
+          show=t.getAttribute("show");
+     //     console.log("display"+display);
+          d3.select(t).style("stroke",color);
+          d3.select(t).style("fill","white");
 
-//          g.select("body").select("#"+id).       
-          t.style.cssText ="stroke: "+color+";stroke-width:0.5px;"+"fill:white";
-
+//          if(show!="1")
+//          d3.select(t).style("display","none");
+//          t.style.cssText ="stroke: "+color+";stroke-width:0.5px;"+"fill:white";
+          
+//            t.style.cssText ="stroke: "+color+";stroke-width:0.5px;"+"fill:white"+
+//          ";display:none";
 }
           }
         }
-        
-//        console.log(ddd.road.length);
       });
 
+};
+//道路选择按钮的触发函数
+$(function() {
+      var temp=$('#1');
+    temp.change(function() {
+          var c=this.checked;
+          g.selectAll("path").each(function(){
+           
+            if(c&&this.getAttribute("Kind")=="2"){
+                d3.select(this).attr("show","1");
+                d3.select(this).style("display","");
+              }
+            else if(this.getAttribute("Kind")=="2"){
+                d3.select(this).attr("show","0");
+                d3.select(this).style("display","none");
+          }
+          });
+        
+    });
+  });     
+$(function() {
+      var temp=$('#0');
+    temp.change(function() {
+          var c=this.checked;
+          g.selectAll("path").each(function(){
+           
+            if(c&&this.getAttribute("Kind")=="1"){
+                d3.select(this).attr("show","1");
+              d3.select(this).style("display","");
+              }
+            else if(this.getAttribute("Kind")=="1"){
+                d3.select(this).attr("show","0");
+                d3.select(this).style("display","none");
+          }
+          });
+        
+    });
+  });
+$(function() {
+      var temp=$('#2');
+    temp.change(function() {
+          var c=this.checked;
+          g.selectAll("path").each(function(){
+           
+            if(c&&this.getAttribute("Kind")=="3"){
+                d3.select(this).attr("show","1");
+                d3.select(this).style("display","");
+              }
+            else if(this.getAttribute("Kind")=="3"){
+                d3.select(this).attr("show","0");
+                d3.select(this).style("display","none");
+          }
+          });
+        
+    });
+  });
+$(function() {
+      var temp=$('#3');
+    temp.change(function() {
+          var c=this.checked;
+          g.selectAll("path").each(function(){
+           
+            if(c&&this.getAttribute("Kind")=="4"){
+                d3.select(this).attr("show","1");
+                d3.select(this).style("display","");
+              }
+            else if(this.getAttribute("Kind")=="4"){
+                d3.select(this).attr("show","0");
+                d3.select(this).style("display","none");
+          }
+          });
+        
+    });
+  });
 
-     
+$("input#road-search").keyup(function(){ //enter
+    if(event.keyCode==13){
+  var n=$("input#road-search").val();
+  var t=document.getElementsByName(n);
+  for(var i=0;i<t.length;i++)
+  d3.select(t[i]).style("stroke-width","6.5px");
+    }
+  }
+  
+);
 
-}
+//$(function () {
+//  $('[data-toggle="popover"]').popover()
+//});
+
+function searchRoad(){
+  var n=$("input#road-search").val();
+  var t=document.getElementsByName(n);//得到一个节点List
+  if(t.length == 0)
+  {
+    console.log("未找到----->>>>>>>");
+    alert("抱歉 所搜索路径未找到！")
+
+  }
+  console.log("路径已找到");
+  for(var i=0;i<t.length;i++)
+    d3.select(t[i]).style("stroke-width","10.5px");
+
+};
 
     </script>
   </body>
 </html>
+
