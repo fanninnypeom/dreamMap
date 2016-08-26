@@ -5,6 +5,7 @@
     <title>D3 World Map</title>
     <link href="http://libs.baidu.com/bootstrap/3.0.3/css/bootstrap.min.css" rel="stylesheet">
 <link href="https://gitcdn.github.io/bootstrap-toggle/2.2.2/css/bootstrap-toggle.min.css" rel="stylesheet">
+<link rel="stylesheet" type="text/css" href="http://developer.amap.com/Public/css/demo.Default.css" />   
     <style>
       path {
         stroke: black;
@@ -15,7 +16,10 @@
         stroke: white;
         stroke-width:0.2px; 
       }
-     
+      .search-size{
+        width:500px;
+overflow-x:       }
+#container {width:1300px; height: 1180px; }     
         stroke-width:1px; 
       }
     </style>
@@ -39,12 +43,23 @@
   <input id="3" type="checkbox" checked data-toggle="toggle"> 一般   
 </label>
 
+
+<div class="input-group search-size">
+    <input id="road-search" type="text" class="form-control input-lg"><span class="input-group-addon btn btn-primary" onclick="searchRoad()">搜索</span>
+</div>
+<div id="container"></div> 
+
+
 <script src="http://libs.baidu.com/jquery/2.0.0/jquery.min.js"></script>
 <script src="https://gitcdn.github.io/bootstrap-toggle/2.2.2/js/bootstrap-toggle.min.js"></script>
+<script type="text/javascript" src="http://webapi.amap.com/maps?v=1.3&key=abcf441d8ae25a58d7f6b0781bcb7347"></script>
 <script src="http://libs.baidu.com/bootstrap/3.0.3/js/bootstrap.min.js"></script>
-    <script type="text/javascript">
+    <script charset="utf-8" type="text/javascript">
 
+//------------以下为高德地图在线加载
+//初始化地图对象，加载地图  
 
+//------------------以上为高德地图在线加载
       var width = 1200;
       var height = 1000;
 
@@ -53,9 +68,13 @@
 						.scale(62250)
     					.translate([width/4, height/4]);
       
-      var svg = d3.select("body").append("svg")
+      var svg = d3.select("body")
+          .append("svg")
+//          .attr("src","data/Beijing.svg")
           .attr("width", width)
           .attr("height", height);
+      var ssvg=document.getElementById("ssvg");
+      console.log("ssvg",ssvg);
       var path = d3.geo.path()
           .projection(projection);
       var g = svg.append("g");
@@ -126,9 +145,9 @@
       }
 
 
-
-
-      d3.json("data/RTICLINK_BeiJing.json", function(error, topology) {
+        d3.text("data/RTICLINK_BeiJing.json","application/json;charset=utf-8",function(text){
+          var topology=JSON.parse(text);
+//      d3.json("data/RTICLINK_BeiJing.json", function(error, topology) {
           g.selectAll("path")
           .data(topology.features ) 
                     .enter()            
@@ -150,7 +169,36 @@
                 return d.properties.Length;
             }
             )
+            .attr("name",function(d,i){
+        return d.properties.Name;
+            })
             .attr("show","1")
+            .each(
+              function(d,i){
+                  var txt="Name: "+d.properties.Name+"  Length: "+d.properties.Length+"km";
+  $(this).popover({
+    trigger:"hover",
+    content:txt,
+    placement:"buttom",
+    container: "body"
+  })
+
+              }
+              );
+//            .attr("data-toggle","popover")
+ //           .attr("data-trigger","focus")
+//            .attr("title","详细信息")
+//            .attr("data-placement","top")
+//            .attr("data-content",function(d,i){
+//              return "名字: "+d.properties.Name+"长度: "+d.properties.Length;
+//            })
+//            .popover()
+//            .on("mouseover",function(d,i){
+                 //.popover('show');
+                //document.getElementById
+ //               $(d.properties.MapID+String(parseInt(d.properties.Kind)-1)+d.properties.ID).popover('show'); 
+ //               console.log("名字"+d.properties.Name+"长度"+d.properties.Length);
+ //           })
             ;
          });
  
@@ -211,18 +259,24 @@ function change(t){
           var speed=l/(ddd.road[i].UsedTime/3600.0);
           var color = color_choose(speed);
           
+          
           show=t.getAttribute("show");
      //     console.log("display"+display);
-          if(show=="1")
-          t.style.cssText ="stroke: "+color+";stroke-width:0.5px;"+"fill:white";
-          else
-            t.style.cssText ="stroke: "+color+";stroke-width:0.5px;"+"fill:white"+
-          ";display:none";
+          d3.select(t).style("stroke",color);
+          d3.select(t).style("fill","white");
+
+//          if(show!="1")
+//          d3.select(t).style("display","none");
+//          t.style.cssText ="stroke: "+color+";stroke-width:0.5px;"+"fill:white";
+          
+//            t.style.cssText ="stroke: "+color+";stroke-width:0.5px;"+"fill:white"+
+//          ";display:none";
 }
           }
         }
       });
 
+};
 //道路选择按钮的触发函数
 $(function() {
       var temp=$('#1');
@@ -232,14 +286,16 @@ $(function() {
            
             if(c&&this.getAttribute("Kind")=="2"){
                 d3.select(this).attr("show","1");
+                d3.select(this).style("display","");
               }
             else if(this.getAttribute("Kind")=="2"){
                 d3.select(this).attr("show","0");
+                d3.select(this).style("display","none");
           }
           });
         
     });
-  })     
+  });     
 $(function() {
       var temp=$('#0');
     temp.change(function() {
@@ -248,14 +304,16 @@ $(function() {
            
             if(c&&this.getAttribute("Kind")=="1"){
                 d3.select(this).attr("show","1");
+              d3.select(this).style("display","");
               }
             else if(this.getAttribute("Kind")=="1"){
                 d3.select(this).attr("show","0");
+                d3.select(this).style("display","none");
           }
           });
         
     });
-  })
+  });
 $(function() {
       var temp=$('#2');
     temp.change(function() {
@@ -264,14 +322,16 @@ $(function() {
            
             if(c&&this.getAttribute("Kind")=="3"){
                 d3.select(this).attr("show","1");
+                d3.select(this).style("display","");
               }
             else if(this.getAttribute("Kind")=="3"){
                 d3.select(this).attr("show","0");
+                d3.select(this).style("display","none");
           }
           });
         
     });
-  })
+  });
 $(function() {
       var temp=$('#3');
     temp.change(function() {
@@ -280,19 +340,54 @@ $(function() {
            
             if(c&&this.getAttribute("Kind")=="4"){
                 d3.select(this).attr("show","1");
+                d3.select(this).style("display","");
               }
             else if(this.getAttribute("Kind")=="4"){
                 d3.select(this).attr("show","0");
+                d3.select(this).style("display","none");
           }
           });
         
     });
+  });
+
+$("input#road-search").keyup(function(){
+    if(event.keyCode==13){
+  var n=$("input#road-search").val();
+  var t=document.getElementsByName(n);
+  for(var i=0;i<t.length;i++)
+  d3.select(t[i]).style("stroke-width","6.5px");
+    }
+  }
+  
+);
+
+//$(function () {
+//  $('[data-toggle="popover"]').popover()
+//});
+
+/*
+$(".l").each(function(){
+  var txt=$(this).html()
+  $(this).popover({
+    trigger:"click",
+    content:txt,
+    placement:"buttom",
   })
+}).on("click",function(){
+  $(".popover").hide();//隐藏popover
+  $(this).popover("show");
+});
+*/
+function searchRoad(){
+  var n=$("input#road-search").val();
+  var t=document.getElementsByName(n);//得到一个节点List
+  for(var i=0;i<t.length;i++)
+    d3.select(t[i]).style("stroke-width","6.5px");
 
-
-
-}
+};
 
     </script>
   </body>
 </html>
+
