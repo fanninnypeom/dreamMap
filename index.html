@@ -206,16 +206,17 @@
    //         .attr("data-toggle","popover")
    //         .attr("data-trigger","focus")
    //         .attr("title","详细信息")
-    //        .attr("data-content",function(d,i){
-    //          return "名字: "+d.properties.Name+"长度: "+d.properties.Length;
-    //        })
+            .attr("data-content",function(d,i){
+              return "名字:"+d.properties.Name+" 长度:"+d.properties.Length+"km";
+            })
 //            .popover()
             .each(
               function(d,i){
-                  var txt="Name: "+d.properties.Name+"  Length: "+d.properties.Length+"km";
+//                  var txt="Name: "+d.properties.Name+"  Length: "+d.properties.Length+"km";
                 $(this).popover({
+                  title:"More information",
                   trigger:"hover",
-                  content:txt,
+//                  content:txt+" Speed: "+this.getAttribute("speed")+"km/h",
                   placement:"buttom",
                   container: "body"
                 })
@@ -288,6 +289,11 @@ function change(t){
      //     console.log("display"+display);
           d3.select(t).style("stroke",color);
           d3.select(t).style("fill","white");
+
+          var txt=t.getAttribute("data-content");
+          var txtArr=txt.split(" ");//将名字，长度，速度分割，保留名字和长度，更新速度
+          //console.log("txt"+txtArr.length);
+          d3.select(t).attr("data-content",txtArr[0]+" "+txtArr[1]+" 速度"+speed+"km/h");
 
 //          if(show!="1")
 //          d3.select(t).style("display","none");
