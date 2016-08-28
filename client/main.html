@@ -1,0 +1,48 @@
+
+<head>
+ <meta charset="utf-8">
+    <title>D3 World Map</title>
+    <link href="main.css" type="text/css">
+</head>
+
+<body> 
+
+
+{{>selector}}
+{{>search}}
+{{>map}}
+
+</body>
+ 
+
+
+<template name="selector">
+  
+<label class="checkbox-inline">
+  <input id="0" type="checkbox" checked data-toggle="toggle"> 其他
+</label>
+<label class="checkbox-inline">
+  <input id="1" type="checkbox" checked data-toggle="toggle"> 高速
+</label>
+<label class="checkbox-inline">
+  <input id="2" type="checkbox" checked data-toggle="toggle"> 快速
+</label>
+<label class="checkbox-inline">
+  <input id="3" type="checkbox" checked data-toggle="toggle"> 一般   
+</label>
+
+</template>
+
+<template name="search">
+
+<div class="input-group search-size">
+    <input id="road-search" type="text" class="form-control input-lg"><span class="input-group-addon btn btn-primary"  id="search-button">搜索</span>
+</div>
+
+</template>
+
+
+<template name="map">
+  
+
+</template>

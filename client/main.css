@@ -1,0 +1,13 @@
+/* CSS declarations go here */
+  path {
+        stroke: black;
+        stroke-width: 1.5px;
+        fill: black;
+      }
+      .l{
+        stroke: white;
+        stroke-width:0.2px; 
+      }
+      .search-size{
+        width:500px;
+        overflow-x: stroke-width:1px;      }    
