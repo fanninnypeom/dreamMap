@@ -8,17 +8,27 @@
     <style>
       path {
         stroke: black;
-        stroke-width: 1.5px;
+        stroke-width: 0.5px;
         fill: black;
+        opacity: 0.5;
+
       }
       .l{
-        stroke: white;
+        stroke: #D1EEEE;
         stroke-width:0.2px; 
       }
       .search-size{
         width:500px;
         overflow-x: stroke-width:1px;      }     
          
+      }
+      circle{
+        fill:red;
+        stroke: blue;
+        opacity: 0.5;
+        }
+      .special_path{
+        opacity: 0;
       }
     </style>
     <script src="http://d3js.org/d3.v3.min.js"></script>
@@ -207,7 +217,8 @@
    //         .attr("data-trigger","focus")
    //         .attr("title","详细信息")
             .attr("data-content",function(d,i){
-              return "名字:"+d.properties.Name+" 长度:"+d.properties.Length+"km";
+              var idshow = d.properties.MapID+String(parseInt(d.properties.Kind)-1)+d.properties.ID;
+              return "名字:"+d.properties.Name+" 长度:"+d.properties.Length+"km"+" 编号:"+idshow;
             })
 //            .popover()
             .each(
@@ -220,7 +231,6 @@
                   placement:"buttom",
                   container: "body"
                 })
-
               }
               );
             ;
@@ -249,16 +259,17 @@ function bigChange(o){
   var times=-1;
 
   var startTime=new Date().getTime();
+  var timestart = null;
   var timer=window.setInterval(function() 
 { 
   times=times+1;
   change(times); 
-  }, 50); 
+  }, 30); 
 
-var a = 0,b =0,c = 0,d = 0,e= 0,f =0,g = 0,h=0,m=0,i=0;
+//var a = 0,b =0,c = 0,d = 0,e= 0,f =0,g = 0,h=0,m=0,i=0;
 
 
-
+/*
 function change(t){
       var t1=t;
         for(var i=t1*8227;i<(t1+1)*8227;i=i+1){
@@ -271,9 +282,7 @@ function change(t){
             else{
               ob=ob+1;
               bigChange(ob);
-              /*var sum = a+b+c+d+e+f+g+h+m+i;
-               a = 0,b =0,c = 0,d = 0,e= 0,f =0,g = 0,h=0,m=0,i=0;
-               */
+              
             }
             return;
           }
@@ -293,18 +302,284 @@ function change(t){
           var txt=t.getAttribute("data-content");
           var txtArr=txt.split(" ");//将名字，长度，速度分割，保留名字和长度，更新速度
           //console.log("txt"+txtArr.length);
-          d3.select(t).attr("data-content",txtArr[0]+" "+txtArr[1]+" 速度"+speed+"km/h");
-
-//          if(show!="1")
-//          d3.select(t).style("display","none");
-//          t.style.cssText ="stroke: "+color+";stroke-width:0.5px;"+"fill:white";
           
-//            t.style.cssText ="stroke: "+color+";stroke-width:0.5px;"+"fill:white"+
-//          ";display:none";
-}
+          d3.select(t).attr("data-content",txtArr[0]+" "+txtArr[1]+" "+txtArr[2]+" 速度:"+speed+"km/h"+" ");
+          
+      }
           }
         }
       });
+
+
+
+      */
+      //var i = 0;
+
+function change(t){
+      var t1=t;
+      var node = null;
+      
+      //var timer = 0;
+      //console.log("------"+t1);
+        for(var i=t1*8227;i<(t1+1)*8227;i=i+1){
+          if(i == 0||i%8227 ==0){
+            
+            if(i ==0)
+              timestart = ddd.road[i].time;
+            //console.log(ddd.road[i].time);
+            //console.log("-------TIME--STart------"+"\n");
+          }
+          
+          if(i>ddd.road.length-1){
+            clearInterval(timer); 
+            console.log("time   "+ob);
+            if(ob>22) //0
+            {
+
+              return;
+
+            }
+            else{
+              ob=ob+1;
+              bigChange(ob);
+              
+            }
+            return;
+          }
+          var id=ddd.road[i].ID;
+          if(!(id == 6056033374))
+
+          /*
+          if(!(id==5956721192||id == 5956721193 ||id == 5956721196||id == 5956721197||id == 5956721199|| id == 5956721195 || id == 5956621281|| id == 5956621283|| id == 5956621284|| id == 5956721286
+            || id == 5956721206
+            || id == 5956721186
+            || id == 5956721188
+            || id == 5956721416
+            || id == 5956721413
+            || id == 5956731414
+            || id == 5956731357
+            || id == 595673138
+            || id == 595673124
+            || id == 595673125
+            || id == 595673117
+            || id == 595673116
+            || id == 595673129
+            || id == 5956731460
+            || id == 595673132
+            || id == 595673111
+            || id == 595673134
+            || id == 595673170
+            || id == 595673135
+            || id == 59567316
+            || id == 595673137
+            || id == 59567313
+            || id == 595673139
+            || id == 595673140
+            || id == 5956631448
+            || id == 595673
+            || id == 595673
+            || id == 595673
+
+          ))*/
+          
+          
+        
+            //(!(id.indexOf("59567211") >= 0 ||id.indexOf("5956731") >= 0||id.indexOf("59566221") >= 0 ||id.indexOf("59566311") >= 0))
+         
+              continue;
+          else{
+            //console.log("---fin----");
+          }
+          
+          var t=document.getElementById(id);
+
+          if(t!=null){
+            var Kind_id = t.getAttribute("Kind");
+            /*
+            if(Kind_id !=2){
+              continue;
+            }
+            */
+            
+            //console.log("have find it" + i+"----");
+            var path_old = t.getAttribute("d");
+            var l=t.getAttribute("Length");
+            var timermin = ddd.road[i].UsedTime;
+            if(timermin>500)
+            { //console.log("============"+timermin +"order:"+timer);
+              //timer++;
+            }
+
+            var speed=l/(ddd.road[i].UsedTime/3600.0);
+            var color = color_choose(speed);
+            
+            
+            
+            
+            var sp = path_old.replace(/[A-Z,]/g," ");
+            var array = sp.split(" ");
+            
+              //console.log(array.length());
+              //console.log(array[0]);
+            //console.log(array[1]);
+            //console.log(array[2]);
+            index_end = (ddd.road[i].time - timestart)/60;
+            //console.log("----END----"+index_end);
+            //id1 = id+"s";
+            id1 = id+"s"+index_end;
+
+            //console.log("strat"+id1);
+            id2 = id+"p";
+
+            var circle1=document.getElementById(id1);
+            var path=d3.select(document.getElementById(id));
+            //console.log(id);
+            //var circle1 = document.getElementById(id1)
+            if(circle1==null){
+                //var div = svg.append("div");
+            circle1 = svg.append("circle")
+                                .attr("id",id1)
+                                .attr("r",2)
+                                .attr("fill",color)
+                                //.attr("style:","fill:"+color)
+                                .attr("transform","translate("+array[1]+","+array[2]+")"); 
+            /*                 
+            console.log("First_initial");
+            console.log(circle1);
+            console.log("\n");
+            */
+
+           /* path = svg.append("path")
+                        .data(path_old)
+                        .attr("id",id2)
+                        .attr("d",path)
+                        //.attr("fill","red")
+                        .attr("stroke","black")
+                        .attr("class","special_path");
+            */
+            //path = d3.select(document.getElementById(id));
+            //console.log(circle1);
+            //console.log(path);
+            ///d3.select()
+                        /*
+            console.log("\n");
+            //console.log(path1);
+            console.log("\n");
+            console.log("\n");
+            */
+
+
+            
+          }
+          else{
+              
+
+            //console.log(circle1);
+
+            //console.log(path1);
+          //}
+
+           // circle1.attr("fill",color);
+          
+           //path = d3.select(document.getElementById(id));
+      //     console.log(path);
+           //console.log("-----"+document.getElementById(id2));
+
+
+            //console.log("---we have find---   "+id1);
+            circle1=d3.select(document.getElementById(id1))
+                     .attr("fill",color);
+            //console.log(circle1);
+
+            }
+            
+                         
+
+
+            /*
+            }
+            else{
+              ;
+            }
+            console.log(circle);
+            */
+            
+            //show=circle.getAttribute("show");
+     //     console.log("display"+display);
+          //d3.select(show).style("stroke",color);
+        //d3.select(circle).attr("fill",color);
+          //console.log("ppppp\n")
+
+           
+
+
+
+
+          transition();
+
+          function transition() {
+            //var l = route.node().getTotalLength();
+            //console.log(circle);
+            //console.log("-----------"+timermin+"-------");
+            circle1.transition()
+                  .duration(timermin)//
+                  .attrTween("transform",translateAlong(path.node()))
+                  .each("end",function(d,i){
+                        //console.log("end"+i);
+                        this.remove();
+                  });
+
+            
+          }
+          
+          function translateAlong(path){
+            var l = path.getTotalLength();
+            return function(d,i,a){
+                return function(t){
+                var p = path.getPointAtLength(t *l);
+                    //console.log("----"+p.x+","+p.y+"---");
+                    return "translate("+p.x +","+p.y+")";
+
+                  };
+            };
+          }
+              
+
+            
+           
+              
+ 
+
+
+          /*
+          var l=t.getAttribute("Length");
+          var speed=l/(ddd.road[i].UsedTime/3600.0);
+          var color = color_choose(speed);
+          
+          
+          show=t.getAttribute("show");
+     //     console.log("display"+display);
+          d3.select(t).style("stroke",color);
+          d3.select(t).style("fill","white");
+
+          var txt=t.getAttribute("data-content");
+          var txtArr=txt.split(" ");//将名字，长度，速度分割，保留名字和长度，更新速度
+          //console.log("txt"+txtArr.length);
+          
+          d3.select(t).attr("data-content",txtArr[0]+" "+txtArr[1]+" "+txtArr[2]+" 速度:"+speed+"km/h"+" ");
+          */
+
+
+          
+      }
+          }
+          //console.log("--fin--"+i);
+
+        }
+      });
+
+
+
 
 };
 //道路选择按钮的触发函数
