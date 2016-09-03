@@ -1,0 +1,24 @@
+      path {
+        stroke: black;
+        stroke-width: 0.5px;
+        fill: black;
+        opacity: 0.5;
+
+      }
+      .l{
+        stroke: #D1EEEE;
+        stroke-width:0.2px; 
+      }
+      .search-size{
+        width:500px;
+        overflow-x: stroke-width:1px;      }     
+         
+      }
+      circle{
+        fill:red;
+        stroke: blue;
+        opacity: 0.5;
+        }
+      .special_path{
+        opacity: 0;
+      }
